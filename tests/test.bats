@@ -359,7 +359,7 @@ EOF
   assert_success
 
   # Verify shims are installed and executable on $PATH
-  run ddev exec --service pi which php composer drush phpunit
+  run ddev exec --service pi which php composer drush phpunit yarn npm
   assert_success
 
   # Verify direct invocation works and reaches web container
@@ -370,6 +370,12 @@ EOF
   run ddev exec --service pi composer --version
   assert_success
   assert_output --partial "Composer"
+
+  run ddev exec --service pi yarn --version
+  assert_success
+
+  run ddev exec --service pi npm --version
+  assert_success
 }
 
 @test "make: executes targets calling proxied web tools" {
