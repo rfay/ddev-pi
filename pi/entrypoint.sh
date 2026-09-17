@@ -27,7 +27,6 @@ try {
 "
 
 # Ensure settings.json is initialized with npmCommand pointing to /usr/bin/npm
-# TODO: Re-evaluate or remove this fallback once 1.0.0 stable is released.
 SETTINGS_FILE="${HOME}/.pi/agent/settings.json"
 node -e "
 const fs = require('fs');
