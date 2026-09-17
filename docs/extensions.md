@@ -104,3 +104,31 @@ myaddon-review.ts
 ```
 
 > **A `ddev restart && ddev start --profiles=pi` is sufficient** to pick up new or updated extensions. No rebuild is needed.
+
+## Web Container Toolchain Proxies (`npm`, `yarn`, `php`, etc.)
+
+To allow the Pi agent to build, test, and interact with your web application, standard CLI development tools (`php`, `composer`, `drush`, `phpunit`, `phpstan`, `phpcs`, `phpcbf`, `yarn`, and `npm`) in the Pi container are configured as proxy shims in `/usr/local/bin/`. These shims forward invocations over a secure SSH bridge to execute directly inside the DDEV `web` container.
+
+### Important for addon authors
+
+Because `/usr/local/bin` takes precedence over `/usr/bin` in `$PATH`:
+- **Running plain `npm` or `yarn` executes inside the `web` container** under the `ddev` user.
+- Any attempt to access or create `/home/pi` paths via plain `npm` in the `web` container will fail with `EACCES: permission denied, mkdir '/home/pi'`.
+
+### What to use instead
+
+1. **Installing Pi extensions / skills:**
+   Use Pi's built-in package manager CLI:
+   ```bash
+   pi install <addon-ref>     # Global extension (stored in .ddev/pi/global/)
+   pi install -l <addon-ref>  # Project extension (stored in .pi/)
+   ```
+   This add-on configures `"npmCommand": ["/usr/bin/npm"]` in Pi's settings (`settings.json`), ensuring Pi automatically invokes the local container binary for internal package operations.
+
+2. **Container-local npm operations in `build.d/` or `entrypoint.d/` scripts:**
+   If your addon startup hook or build script needs to invoke npm locally inside the `pi` container (e.g., installing a tool or dependency into `/home/pi` or the container filesystem):
+   ```bash
+   # Use /usr/bin/npm explicitly to bypass the web container proxy shim
+   /usr/bin/npm install -g <package>
+   ```
+
