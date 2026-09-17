@@ -3,7 +3,7 @@ import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { isToolCallEventType } from "@earendil-works/pi-coding-agent";
 
 // Tools forwarded to the DDEV web container via /usr/local/bin system shims.
-const WEB_TOOLS = ["php", "composer", "drush", "phpunit", "phpstan", "phpcs", "phpcbf"] as const;
+const WEB_TOOLS = ["php", "composer", "drush", "phpunit", "phpstan", "phpcs", "phpcbf", "yarn", "npm"] as const;
 
 // Pattern matching any web tool invocation, bare or prefixed with (./)vendor/bin/
 const WEB_TOOL_PATTERN = new RegExp(

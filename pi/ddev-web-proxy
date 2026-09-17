@@ -5,7 +5,7 @@
 #
 # Forwards tool execution from the PI container to the DDEV web container
 # over SSH. This provides transparent access to the web container's PHP runtime,
-# Composer, Drush, and testing tools for both interactive and non-interactive
+# Composer, Drush, Yarn, npm, and testing tools for both interactive and non-interactive
 # contexts (such as Makefile recipes, scripts, and subshells).
 
 tool="$(basename "$0")"

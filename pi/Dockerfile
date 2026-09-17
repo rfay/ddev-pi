@@ -91,7 +91,7 @@ RUN chmod +x /usr/local/bin/entrypoint.sh
 # Copy and configure web container tool forwarding proxy
 COPY ddev-web-proxy /usr/local/bin/ddev-web-proxy
 RUN chmod +x /usr/local/bin/ddev-web-proxy \
-    && for tool in php composer drush phpunit phpstan phpcs phpcbf; do \
+    && for tool in php composer drush phpunit phpstan phpcs phpcbf yarn npm; do \
          ln -sf /usr/local/bin/ddev-web-proxy /usr/local/bin/${tool}; \
        done
 
@@ -131,7 +131,8 @@ ENV HOME=${USER_HOME}
 ENV NPM_CONFIG_PREFIX=${USER_HOME}/.npm-global
 ENV PATH=${USER_HOME}/.pi/agent/bin:${USER_HOME}/.npm-global/bin:${USER_HOME}/.local/bin:${USER_HOME}/bin:$PATH
 
-RUN npm_config_update_notifier=false npm install -g --ignore-scripts @earendil-works/pi-coding-agent@${PI_VERSION}
+# Use /usr/bin/npm explicitly to bypass the /usr/local/bin/npm web proxy shim during image build.
+RUN npm_config_update_notifier=false /usr/bin/npm install -g --ignore-scripts @earendil-works/pi-coding-agent@${PI_VERSION}
 
 # ---------------------------------------------------------------------------
 # bashrc.d/ extensibility seam
