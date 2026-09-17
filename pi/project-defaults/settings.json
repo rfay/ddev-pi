@@ -7,6 +7,9 @@
   "defaultThinkingLevel": "medium",
   "collapseChangelog": true,
   "enableInstallTelemetry": false,
+  "npmCommand": [
+    "/usr/bin/npm"
+  ],
   "terminal": {
     "showTerminalProgress": true
   }

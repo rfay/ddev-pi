@@ -26,6 +26,24 @@ try {
 } catch (e) {}
 "
 
+# Ensure settings.json is initialized with npmCommand pointing to /usr/bin/npm
+# TODO: Re-evaluate or remove this fallback once 1.0.0 stable is released.
+SETTINGS_FILE="${HOME}/.pi/agent/settings.json"
+node -e "
+const fs = require('fs');
+const path = '${SETTINGS_FILE}';
+try {
+  let data = {};
+  try {
+    data = JSON.parse(fs.readFileSync(path, 'utf8'));
+  } catch (e) {}
+  if (!Array.isArray(data.npmCommand)) {
+    data.npmCommand = ['/usr/bin/npm'];
+    fs.writeFileSync(path, JSON.stringify(data, null, 2) + '\n');
+  }
+} catch (e) {}
+"
+
 # Ensure pi wrapper script disables terminal suspension on invocation
 mkdir -p "${HOME}/.pi/agent/bin"
 cat <<'EOF' > "${HOME}/.pi/agent/bin/pi"

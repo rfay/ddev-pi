@@ -407,4 +407,55 @@ EOF
   assert_output --partial "make-proxy-works"
 }
 
+@test "extension management: pi install and list extensions work end-to-end" {
+  set -eu -o pipefail
+  echo "# Testing extension installation e2e with project ${PROJNAME} in $(pwd)" >&3
+
+  run ddev add-on get "${DIR}"
+  assert_success
+
+  run ddev restart && ddev start --profiles=pi
+  assert_success
+
+  # Create a local extension fixture inside the project directory
+  mkdir -p "${TESTDIR}/pi-test-extension"
+  cat << 'EOF' > "${TESTDIR}/pi-test-extension/package.json"
+{
+  "name": "pi-test-extension",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "index.js"
+}
+EOF
+  cat << 'EOF' > "${TESTDIR}/pi-test-extension/index.js"
+export default function (pi) {}
+EOF
+
+  # 1. Test global scope install
+  run ddev exec --service pi pi install /var/www/html/pi-test-extension
+  assert_success
+
+  # Verify extension appears in pi list
+  run ddev exec --service pi pi list
+  assert_success
+  assert_output --partial "pi-test-extension"
+
+  # Clean up global extension
+  run ddev exec --service pi pi remove /var/www/html/pi-test-extension
+  assert_success
+
+  # 2. Test project scope install (-l)
+  run ddev exec --service pi pi install -l /var/www/html/pi-test-extension
+  assert_success
+
+  # Verify extension appears in pi list
+  run ddev exec --service pi pi list
+  assert_success
+  assert_output --partial "pi-test-extension"
+
+  # Clean up project extension
+  run ddev exec --service pi pi remove -l /var/www/html/pi-test-extension
+  assert_success
+}
+
 
