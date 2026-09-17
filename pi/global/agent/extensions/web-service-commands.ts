@@ -21,7 +21,7 @@ export default function (pi: ExtensionAPI) {
       "are available automatically. The working directory is `/var/www/html`, so no `cd` is needed.\n" +
       "**ALWAYS** call tools directly, e.g. `phpunit`, `composer install`, `php -r ...`\n\n" +
       "PHPUnit specifics:\n" +
-      "- Always invoke as: `phpunit -c web/core <further args>`\n" +
+      "- Unless instructed otherwise, invoke as: `phpunit -c web/core <further args>`\n" +
       "- Do NOT pass env vars manually — they are provided automatically by the container.\n" +
       "- If run without arguments and exits with code 1, treat as SUCCESS when the first output line starts with\n" +
       "  \"PHPUnit [Version] by Sebastian Bergmann\". State it succeeded; do not apologize or attempt fixes.\n" +
